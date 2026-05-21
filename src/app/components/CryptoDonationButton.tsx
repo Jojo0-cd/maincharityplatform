@@ -2,7 +2,48 @@
 
 import { useState } from "react";
 
-/// --- MAIN UI COMPONENT ---
+// --- TYPE DEFINITIONS ---
+// Declaring this at the top guarantees the compiler registers the interface safely.
+interface CryptoDonationButtonProps {
+  campaignWalletAddress: string;
+  donationAmount: string; // Matched with string state to prevent prop type mismatches
+}
+
+// --- CHILD COMPONENT: CryptoDonationButton ---
+// Declaring child components cleanly allows clean compilation.
+function CryptoDonationButton({ campaignWalletAddress, donationAmount }: CryptoDonationButtonProps) {
+  const amountNum = Number(donationAmount);
+  const isValid = !isNaN(amountNum) && amountNum > 0;
+
+  const handleDonate = () => {
+    if (!isValid) return;
+    
+    // Attempt to open a wallet using the ethereum: URI scheme
+    const uri = `ethereum:${campaignWalletAddress}?value=${amountNum}`;
+    try {
+      window.location.href = uri;
+    } catch (e) {
+      // Fallback: copy address to clipboard if deep link is unhandled
+      navigator.clipboard?.writeText(campaignWalletAddress);
+      alert('Address copied to clipboard. Use your wallet to send the donation.');
+    }
+  };
+
+  return (
+    <button
+      onClick={handleDonate}
+      disabled={!isValid}
+      className={`w-full mt-2 py-3 rounded-md font-semibold text-white transition-colors ${
+        isValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'
+      }`}
+      aria-disabled={!isValid}
+    >
+      {isValid ? `Donate ${amountNum} ETH` : 'Enter an amount'}
+    </button>
+  );
+}
+
+// --- MAIN UI COMPONENT ---
 export default function DonationBox() {
   const [amount, setAmount] = useState("");
   
@@ -53,41 +94,5 @@ export default function DonationBox() {
         donationAmount={amount} 
       />
     </div>
-  );
-}
-
-// --- CHILD COMPONENT: CryptoDonationButton ---
-type CryptoDonationButtonProps = {
-  campaignWalletAddress: string;
-  donationAmount: string | number;
-};
-
-function CryptoDonationButton({ campaignWalletAddress, donationAmount }: CryptoDonationButtonProps) {
-  const amountNum = Number(donationAmount);
-  const isValid = !isNaN(amountNum) && amountNum > 0;
-
-  const handleDonate = () => {
-    if (!isValid) return;
-    // Attempt to open a wallet using the ethereum: URI scheme (many wallets support this).
-    // Amount should be in ETH for the URI; many wallets expect decimals.
-    const uri = `ethereum:${campaignWalletAddress}?value=${amountNum}`;
-    try {
-      window.location.href = uri;
-    } catch (e) {
-      // fallback: copy address to clipboard
-      navigator.clipboard?.writeText(campaignWalletAddress);
-      alert('Address copied to clipboard. Use your wallet to send the donation.');
-    }
-  };
-
-  return (
-    <button
-      onClick={handleDonate}
-      disabled={!isValid}
-      className={`w-full mt-2 py-3 rounded-md text-white ${isValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'}`}
-      aria-disabled={!isValid}
-    >
-      {isValid ? `Donate ${amountNum} ETH` : 'Enter an amount'}
-    </button>
   );
 }
