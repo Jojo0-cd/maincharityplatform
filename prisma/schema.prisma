@@ -17,12 +17,7 @@ model Campaign {
   description   String
   goalAmount    Float
   walletAddress String   
-  donations     Donation[] 
-  
-  // Add these two lines:
-  creatorId     String
-  user          User       @relation(fields: [creatorId], references: [id])
-  
+  donations     Donation[]  
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 }
