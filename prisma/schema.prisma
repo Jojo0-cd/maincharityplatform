@@ -12,15 +12,20 @@ generator client {
 }
 
 model Campaign {
-      id            String     @id @default(cuid())
-      title         String
-      description   String
-      goalAmount    Float
-      walletAddress String   
-      donations     Donation[] 
-      createdAt     DateTime   @default(now())
-      updatedAt     DateTime   @updatedAt
-    }
+  id            String     @id @default(cuid())
+  title         String
+  description   String
+  goalAmount    Float
+  walletAddress String   
+  donations     Donation[] 
+  
+  // Add these two lines:
+  creatorId     String
+  user          User       @relation(fields: [creatorId], references: [id])
+  
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
 
 model Donation {
   id            String   @id @default(cuid())
