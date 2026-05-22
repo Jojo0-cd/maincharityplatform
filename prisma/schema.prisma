@@ -27,6 +27,11 @@ model Campaign {
   updatedAt     DateTime   @updatedAt
 }
 
+model User {
+  // ... your existing user fields
+  campaigns     Campaign[]
+}
+
 model Donation {
   id            String   @id @default(cuid())
   amount        Float
