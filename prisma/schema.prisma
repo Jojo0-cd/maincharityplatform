@@ -28,8 +28,8 @@ model Campaign {
 }
 
 model User {
-  // ... your existing user fields
-  campaigns     Campaign[]
+  id        String     @id
+  campaigns Campaign[]
 }
 
 model Donation {
