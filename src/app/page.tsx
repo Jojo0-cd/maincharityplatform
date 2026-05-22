@@ -8,7 +8,7 @@ export const campaigns = [
     description: "Help us build sustainable water wells in rural communities.",
     goalAmount: 5.0,
     currentRaised: 2.1,
-    walletAddress: "0x1111111111111111111111111111111111111111", // Example Wallet A
+    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45", // Example Wallet A
   },
   {
     id: "tech-for-kids",
@@ -16,7 +16,7 @@ export const campaigns = [
     description: "Providing laptops and internet access to underprivileged students.",
     goalAmount: 10.0,
     currentRaised: 8.5,
-    walletAddress: "0x2222222222222222222222222222222222222222", // Example Wallet B
+    walletAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", // Wallet B
   },
   {
     id: "emergency-relief",
@@ -24,7 +24,7 @@ export const campaigns = [
     description: "Immediate disaster response and supply distribution.",
     goalAmount: 2.0,
     currentRaised: 0.5,
-    walletAddress: "0x3333333333333333333333333333333333333333", // Example Wallet C
+    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45", // Example Wallet C
   }
 ];
 
