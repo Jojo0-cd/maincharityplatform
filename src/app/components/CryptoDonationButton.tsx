@@ -58,11 +58,11 @@ export default function DonationBox() {
 
       {/* RENDER THE MODAL WHEN OPEN */}
       {isModalOpen && (
-        <CheckoutModal 
-          campaignName="This Campaign" // You can pass dynamic campaign names here later
-          onClose={() => setIsModalOpen(false)} 
-        />
-      )}
+  <CheckoutModal
+    campaignName="This Campaign"
+    onClose={() => setIsModalOpen(false)}
+  />
+)}
     </div>
   );
 }
