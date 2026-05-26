@@ -59,39 +59,67 @@ export default function HomePage() {
 
       {/* CAMPAIGN GRID - Maps the 15 campaigns dynamically */}
       <section className="max-w-7xl mx-auto px-4 pb-32">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {campaigns.map((campaign) => (
-            <motion.div 
-              key={campaign.id}
-              whileHover={{ y: -10 }}
-              className="bg-gray-50 rounded-3xl p-8 flex flex-col h-full border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-300"
-            >
-              <h3 className="text-2xl font-black mb-4 tracking-tight leading-snug">{campaign.title}</h3>
-              <p className="text-gray-600 mb-10 flex-grow leading-relaxed">{campaign.description}</p>
-              
-              <div className="mb-8">
-                <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3">
-                  <span className="text-blue-600">{campaign.currentRaised} ETH</span>
-                  <span className="text-gray-400">Target: {campaign.goalAmount} ETH</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${Math.min((campaign.currentRaised / campaign.goalAmount) * 100, 100)}%` }}
-                    transition={{ duration: 1.5, ease: "easeOut" }}
-                    className="bg-gradient-to-r from-blue-600 to-emerald-500 h-full rounded-full"
-                  />
-                </div>
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {campaigns.map((campaign) => {
+            const progressPercentage = Math.min((campaign.currentRaised / campaign.goalAmount) * 100, 100);
 
-              <Link 
-                href={`/campaign/${campaign.id}`}
-                className="w-full text-center bg-white border border-gray-900 text-gray-900 font-bold py-4 rounded-2xl hover:bg-gray-900 hover:text-white transition-all shadow-sm"
+            return (
+              <motion.div 
+                key={campaign.id}
+                whileHover={{ y: -10 }}
+                // Added overflow-hidden and removed padding from the main wrapper so the image hits the edges
+                className="bg-gray-50 rounded-3xl flex flex-col h-full border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden group"
               >
-                Fund This Cause
-              </Link>
-            </motion.div>
-          ))}
+                {/* Hero Image & Floating Badge */}
+                <div className="w-full h-56 relative bg-gray-200 overflow-hidden">
+                  {campaign.imageUrl && (
+                    <img 
+                      src={campaign.imageUrl} 
+                      alt={campaign.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  )}
+                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md text-gray-900 text-xs font-black px-3 py-1.5 rounded-full shadow-lg">
+                    {progressPercentage.toFixed(0)}% FUNDED
+                  </div>
+                </div>
+
+                {/* Content Section */}
+                <div className="p-8 flex flex-col flex-grow">
+                  <h3 className="text-2xl font-black mb-2 tracking-tight leading-snug">{campaign.title}</h3>
+                  <p className="text-sm font-bold text-blue-600 mb-4">{campaign.description}</p>
+                  
+                  {/* Concrete Writeup Preview (Limited to 3 lines) */}
+                  <p className="text-gray-600 mb-10 flex-grow leading-relaxed line-clamp-3">
+                    {campaign.longDescription}
+                  </p>
+                  
+                  {/* Funding Bar */}
+                  <div className="mb-8">
+                    <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3">
+                      <span className="text-blue-600">{campaign.currentRaised} ETH</span>
+                      <span className="text-gray-400">Target: {campaign.goalAmount} ETH</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${progressPercentage}%` }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className="bg-gradient-to-r from-blue-600 to-emerald-500 h-full rounded-full"
+                      />
+                    </div>
+                  </div>
+
+                  <Link 
+                    href={`/campaign/${campaign.id}`}
+                    className="w-full text-center bg-white border border-gray-900 text-gray-900 font-bold py-4 rounded-2xl hover:bg-gray-900 hover:text-white transition-all shadow-sm"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
     </div>
