@@ -13,7 +13,7 @@ const [isModalOpen, setIsModalOpen] = useState(false);
       {isModalOpen && (
         <CheckoutModal 
           campaignName="This Campaign" 
-          campaignWalletAddress={CAMPAIGN_WALLET_ADDRESS}
+          campaignWalletAddress="0x1234567890123456789012345678901234567890"
           onClose={() => setIsModalOpen(false)} 
         />
       )}
@@ -62,7 +62,7 @@ export default function DonationBox() {
       {isModalOpen && (
         <CheckoutModal 
           campaignName="This Campaign" 
-          campaignWalletAddress={CAMPAIGN_WALLET_ADDRESS}
+          campaignWalletAddress="0x1234567890123456789012345678901234567890"
           onClose={() => setIsModalOpen(false)} 
         />
       )}
