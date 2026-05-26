@@ -2,81 +2,78 @@
 
 import { useState, use } from "react";
 import Link from "next/link";
-import { campaigns } from "../../page"; 
-import CheckoutModal from '../../components/CheckoutModal'; // Import the new modal!
+import { motion } from "framer-motion";
+import { campaigns } from "../../../data/campaigns"; 
+import CheckoutModal from '../../components/CheckoutModal';
 
 export default function CampaignPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params); 
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal State
+  const { id } = use(params);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   const campaign = campaigns.find((c) => c.id === id);
 
-  if (!campaign) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-black">
-        <h1 className="text-3xl font-bold mb-4">Campaign Not Found</h1>
-        <Link href="/" className="text-blue-600 hover:underline">
-          &larr; Back to Homepage
-        </Link>
-      </div>
-    );
-  }
-
-  const progressPercentage = Math.min((campaign.currentRaised / campaign.goalAmount) * 100, 100);
+  if (!campaign) return <div className="p-20 text-center">Campaign Not Found</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 text-black">
-      <div className="max-w-2xl mx-auto">
-        
-        <Link href="/" className="text-gray-500 hover:text-black mb-8 inline-block transition-colors">
-          &larr; Back to all campaigns
+    <div className="min-h-screen bg-white text-gray-900 py-20 px-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-3xl mx-auto"
+      >
+        <Link href="/" className="text-gray-400 hover:text-blue-600 transition-colors font-bold mb-8 block">
+          &larr; Back to Platform
         </Link>
 
-        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-md border border-gray-100">
-          <h1 className="text-4xl font-bold mb-4">{campaign.title}</h1>
-          <p className="text-gray-600 text-lg mb-8">{campaign.description}</p>
+        {/* Header Section */}
+        <h1 className="text-6xl font-black tracking-tighter mb-6 leading-none">
+          {campaign.title}
+        </h1>
+        <p className="text-xl text-gray-500 mb-12 leading-relaxed">
+          {campaign.description}
+        </p>
 
-          <div className="mb-8 p-6 bg-gray-50 rounded-xl border border-gray-100">
-            <div className="flex justify-between text-sm mb-2 font-semibold">
-              <span className="text-blue-600">{campaign.currentRaised} ETH Raised</span>
-              <span className="text-gray-500">Goal: {campaign.goalAmount} ETH</span>
+        {/* Interactive Stats Card */}
+        <div className="bg-gray-50 p-10 rounded-3xl border border-gray-100 shadow-sm mb-10">
+          <div className="flex justify-between items-end mb-6">
+            <div>
+              <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-1">Current Funding</p>
+              <p className="text-5xl font-black">{campaign.currentRaised} ETH</p>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
-              <div 
-                className="bg-blue-600 h-4 rounded-full transition-all duration-500" 
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <p className="text-xs text-gray-500 uppercase font-semibold tracking-wider mb-1">Campaign Wallet</p>
-              <p className="text-sm font-mono text-gray-700 bg-gray-100 p-2 rounded break-all">
-                {campaign.walletAddress}
-              </p>
-            </div>
+            <p className="text-gray-400 font-bold">Goal: {campaign.goalAmount} ETH</p>
+          </div>
+          
+          <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden mb-6">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min((campaign.currentRaised / campaign.goalAmount) * 100, 100)}%` }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="bg-gradient-to-r from-blue-600 to-emerald-500 h-full"
+            />
           </div>
 
-          <hr className="border-gray-200 mb-8" />
-
-          <div>
-            {/* The Trigger Button */}
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="w-full py-4 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm"
-            >
-              Fund This Campaign
-            </button>
-
-            {/* The Modal */}
-            {isModalOpen && (
-              <CheckoutModal 
-                campaignName={campaign.title} 
-                campaignWalletAddress={campaign.walletAddress}
-                onClose={() => setIsModalOpen(false)} 
-              />
-            )}
-          </div>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="w-full py-5 rounded-2xl font-black text-white bg-gray-900 hover:bg-black transition-all hover:scale-[1.01] shadow-xl text-lg"
+          >
+            Fund This Cause
+          </button>
         </div>
-      </div>
+
+        {/* Verification Section */}
+        <div className="p-6 border border-gray-100 rounded-2xl">
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Verified Contract Address</p>
+          <code className="text-sm font-mono text-blue-600 break-all">{campaign.walletAddress}</code>
+        </div>
+      </motion.div>
+
+      {isModalOpen && (
+        <CheckoutModal 
+          campaignName={campaign.title} 
+          campaignWalletAddress={campaign.walletAddress}
+          onClose={() => setIsModalOpen(false)} 
+        />
+      )}
     </div>
   );
 }

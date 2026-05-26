@@ -1,30 +1,38 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-      provider = "prisma-client-js"
-    }
+  provider = "prisma-client-js"
+}
 
-    datasource db {
+datasource db {
   provider = "postgresql"
 }
 
+// NEW: Define campaign states
+enum CampaignStatus {
+  ACTIVE
+  FUNDED
+  PAUSED
+}
+
 model Campaign {
-  id            String     @id @default(cuid())
-  title         String
-  description   String
-  goalAmount    Float
-  walletAddress String   
-  donations     Donation[] 
+  id              String         @id @default(cuid())
+  title           String
+  description     String
+  fullStory       String?        @db.Text
+  imageUrl        String?
+  goalAmount      Float
+  currentRaised   Float          @default(0) // NEW: Keeps track of total funds
+  walletAddress   String   
+  status          CampaignStatus @default(ACTIVE) // NEW: Status tracking
+  donations       Donation[] 
   
-  // Add these two lines:
-  creatorId     String
-  user          User       @relation(fields: [creatorId], references: [id])
+  creatorId       String
+  user            User           @relation(fields: [creatorId], references: [id])
   
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 }
 
 model User {
@@ -36,7 +44,9 @@ model Donation {
   id            String   @id @default(cuid())
   amount        Float
   txHash        String   @unique 
+  donorAddress  String?  // NEW: Optional field to track who gave
   campaignId    String
-  campaign      Campaign @relation(fields: [campaignId], references: [id])
+  // NEW: onDelete Cascade ensures if a campaign is deleted, its donations are safely cleaned up too
+  campaign      Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade) 
   createdAt     DateTime @default(now())
 }

@@ -1,80 +1,99 @@
-import Link from "next/link";
+"use client";
 
-// 1. ADDED: Unique walletAddress for every campaign!
-export const campaigns = [
-  {
-    id: "clean-water",
-    title: "Clean Water Initiative",
-    description: "Help us build sustainable water wells in rural communities.",
-    goalAmount: 5.0,
-    currentRaised: 2.1,
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45", // Example Wallet A
-  },
-  {
-    id: "tech-for-kids",
-    title: "Tech For Kids",
-    description: "Providing laptops and internet access to underprivileged students.",
-    goalAmount: 10.0,
-    currentRaised: 8.5,
-    walletAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", // Wallet B
-  },
-  {
-    id: "emergency-relief",
-    title: "Emergency Relief Fund",
-    description: "Immediate disaster response and supply distribution.",
-    goalAmount: 2.0,
-    currentRaised: 0.5,
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45", // Example Wallet C
-  }
-];
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { campaigns } from "../data/campaigns";
 
 export default function HomePage() {
-  return (
-    <div className="min-h-screen bg-gray-50 py-16 px-4 sm:px-6 lg:px-8 text-black">
-      <div className="max-w-7xl mx-auto">
-        
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight mb-4">
-            Support Our Causes
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Choose a campaign below to donate directly using Ethereum. Every contribution makes a difference.
-          </p>
-        </div>
+  const { isLoaded, isSignedIn } = useUser();
 
-        {/* Campaign Grid */}
+  return (
+    <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-blue-100">
+      
+      {/* HERO SECTION */}
+      <div className="relative overflow-hidden pt-24 pb-32 px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative max-w-4xl mx-auto text-center"
+        >
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-blue-50 text-blue-700 mb-8 border border-blue-100">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            </span>
+            Decentralized Philanthropy
+          </span>
+          
+          <h1 className="text-6xl sm:text-7xl font-black tracking-tighter mb-8 leading-[0.95]">
+            Change happens <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-500 to-emerald-500">
+              on-chain.
+            </span>
+          </h1>
+          
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
+            Eliminate friction, bypass intermediaries, and send your support directly to verified causes with pure transparency.
+          </p>
+
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            {isLoaded && isSignedIn ? (
+              <Link href="/creator" className="group relative bg-gray-900 text-white font-bold px-10 py-5 rounded-full shadow-2xl hover:bg-black transition-all hover:scale-105">
+                Launch a Campaign
+              </Link>
+            ) : (
+              <SignInButton mode="modal">
+                <button className="bg-gray-900 text-white font-bold px-10 py-5 rounded-full shadow-2xl hover:bg-black transition-all hover:scale-105">
+                  Start a Campaign
+                </button>
+              </SignInButton>
+            )}
+            <Link href="/impact" className="font-bold text-gray-500 hover:text-gray-900 px-8 py-5 transition-colors">
+              View Live Impact &rarr;
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* CAMPAIGN GRID - Maps the 15 campaigns dynamically */}
+      <section className="max-w-7xl mx-auto px-4 pb-32">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {campaigns.map((campaign) => (
-            <div key={campaign.id} className="bg-white rounded-xl shadow-md border border-gray-100 p-6 flex flex-col h-full hover:shadow-lg transition-shadow">
-              <h2 className="text-2xl font-bold mb-2">{campaign.title}</h2>
-              <p className="text-gray-600 mb-6 flex-grow">{campaign.description}</p>
+            <motion.div 
+              key={campaign.id}
+              whileHover={{ y: -10 }}
+              className="bg-gray-50 rounded-3xl p-8 flex flex-col h-full border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-300"
+            >
+              <h3 className="text-2xl font-black mb-4 tracking-tight leading-snug">{campaign.title}</h3>
+              <p className="text-gray-600 mb-10 flex-grow leading-relaxed">{campaign.description}</p>
               
-              <div className="mb-6">
-                <div className="flex justify-between text-sm mb-1 font-medium">
-                  <span className="text-blue-600">{campaign.currentRaised} ETH Raised</span>
-                  <span className="text-gray-500">Goal: {campaign.goalAmount} ETH</span>
+              <div className="mb-8">
+                <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3">
+                  <span className="text-blue-600">{campaign.currentRaised} ETH</span>
+                  <span className="text-gray-400">Target: {campaign.goalAmount} ETH</span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div 
-                    className="bg-blue-600 h-2 rounded-full" 
-                    style={{ width: `${Math.min((campaign.currentRaised / campaign.goalAmount) * 100, 100)}%` }}
-                  ></div>
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${Math.min((campaign.currentRaised / campaign.goalAmount) * 100, 100)}%` }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    className="bg-gradient-to-r from-blue-600 to-emerald-500 h-full rounded-full"
+                  />
                 </div>
               </div>
 
-              {/* The Next.js Link to the dynamic page */}
               <Link 
                 href={`/campaign/${campaign.id}`}
-                className="w-full block text-center bg-gray-900 text-white font-semibold py-3 rounded-md hover:bg-gray-800 transition-colors"
+                className="w-full text-center bg-white border border-gray-900 text-gray-900 font-bold py-4 rounded-2xl hover:bg-gray-900 hover:text-white transition-all shadow-sm"
               >
-                View Campaign
+                Fund This Cause
               </Link>
-            </div>
+            </motion.div>
           ))}
         </div>
-
-      </div>
+      </section>
     </div>
   );
 }
