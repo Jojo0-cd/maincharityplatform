@@ -1,6 +1,7 @@
 [build]
-  # We chain the install with the flag, then generate prisma, then build
-  command = "npm install --legacy-peer-deps && npx prisma generate && npm run build"
+  # We are moving the install command to the very front to ensure it runs
+  # The environment variable set in the dashboard will now apply to this
+  command = "npm install $NPM_FLAGS && npx prisma generate && npm run build"
   publish = ".next"
 
 [[plugins]]
