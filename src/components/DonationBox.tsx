@@ -1,14 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import CheckoutModal from './CheckoutModal'; // This pulls in the new modal UI!
+import CheckoutModal from './CheckoutModal'; 
 
 export default function DonationBox() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Replace with your actual receiving wallet address
-  const CAMPAIGN_WALLET_ADDRESS = "0x1234567890123456789012345678901234567890";
-
   // --- PROGRESS BAR DATA ---
   const goalAmount = 1500;
   const currentRaised = 850; 
@@ -34,7 +31,7 @@ export default function DonationBox() {
 
       <hr className="border-gray-200" />
 
-      {/* NEW TRIGGER BUTTON - This replaces the old input and button */}
+      {/* NEW TRIGGER BUTTON */}
       <button
         onClick={() => setIsModalOpen(true)}
         className="w-full mt-2 py-4 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm"
@@ -46,6 +43,7 @@ export default function DonationBox() {
       {isModalOpen && (
         <CheckoutModal 
           campaignName="This Campaign" 
+          campaignWalletAddress="0x1234567890123456789012345678901234567890"
           onClose={() => setIsModalOpen(false)} 
         />
       )}
