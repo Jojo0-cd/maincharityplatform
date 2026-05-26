@@ -1,5 +1,6 @@
 [build]
-  command = "npx prisma generate && npm run build"
+  # We chain the install with the flag, then generate prisma, then build
+  command = "npm install --legacy-peer-deps && npx prisma generate && npm run build"
   publish = ".next"
 
 [[plugins]]
