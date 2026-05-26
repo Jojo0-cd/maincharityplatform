@@ -10,9 +10,9 @@ const [isModalOpen, setIsModalOpen] = useState(false);
 <button onClick={() => setIsModalOpen(true)}>Donate Now</button>
 
 {isModalOpen && (
-  <CheckoutModal 
-    campaignName={campaign.title} 
-    onClose={() => setIsModalOpen(false)} 
+  <CheckoutModal
+    campaignName="This Campaign"
+    onClose={() => setIsModalOpen(false)}
   />
 )}
 
