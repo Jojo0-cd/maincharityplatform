@@ -9,12 +9,14 @@ const [isModalOpen, setIsModalOpen] = useState(false);
 // ... inside your render:
 <button onClick={() => setIsModalOpen(true)}>Donate Now</button>
 
-{isModalOpen && (
-  <CheckoutModal
-    campaignName="This Campaign"
-    onClose={() => setIsModalOpen(false)}
-  />
-)}
+{/* RENDER THE MODAL WHEN OPEN */}
+      {isModalOpen && (
+        <CheckoutModal 
+          campaignName="This Campaign" 
+          campaignWalletAddress={CAMPAIGN_WALLET_ADDRESS}
+          onClose={() => setIsModalOpen(false)} 
+        />
+      )}
 
 // --- MAIN UI COMPONENT ---
 export default function DonationBox() {
@@ -58,9 +60,12 @@ export default function DonationBox() {
 
       {/* RENDER THE MODAL WHEN OPEN */}
       {isModalOpen && (
-  <CheckoutModal
-    campaignName="This Campaign"
-    onClose={() => setIsModalOpen(false)}
+        <CheckoutModal 
+          campaignName="This Campaign" 
+          campaignWalletAddress={CAMPAIGN_WALLET_ADDRESS}
+          onClose={() => setIsModalOpen(false)} 
+        />
+      )}
   />
 )}
     </div>
