@@ -19,7 +19,7 @@ export default function CampaignPage({ params }: { params: Promise<{ id: string 
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-4xl mx-auto" // Expanded slightly to make the image pop
+        className="max-w-4xl mx-auto"
       >
         <Link href="/" className="text-gray-400 hover:text-blue-600 transition-colors font-bold mb-8 inline-block">
           &larr; Back to Platform
@@ -55,7 +55,6 @@ export default function CampaignPage({ params }: { params: Promise<{ id: string 
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold mb-6 border-b pb-4 border-gray-100">About the Initiative</h3>
             <div className="text-gray-600 leading-loose text-lg space-y-6">
-              {/* This renders the \n characters as beautifully spaced paragraphs */}
               {campaign.longDescription ? (
                 campaign.longDescription.split('\n').map((paragraph, idx) => (
                   paragraph.trim() !== "" && <p key={idx}>{paragraph}</p>
@@ -98,11 +97,25 @@ export default function CampaignPage({ params }: { params: Promise<{ id: string 
               </div>
 
               {/* Verification Section */}
-              <div className="p-6 border border-gray-100 rounded-3xl bg-white shadow-sm">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Verified Contract</p>
-                <code className="text-xs font-mono text-blue-600 break-all bg-blue-50 p-3 rounded-xl block">
-                  {campaign.walletAddress}
-                </code>
+              <div className="p-6 border border-gray-100 rounded-3xl bg-white shadow-sm space-y-4">
+                <div>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">ETH Contract</p>
+                  <code className="text-xs font-mono text-purple-600 break-all bg-purple-50 p-2 rounded-lg block">
+                    {campaign.ethAddress || "Address not set"}
+                  </code>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">BNB Contract</p>
+                  <code className="text-xs font-mono text-yellow-600 break-all bg-yellow-50 p-2 rounded-lg block">
+                    {campaign.bnbAddress || "Address not set"}
+                  </code>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">BTC Address</p>
+                  <code className="text-xs font-mono text-orange-600 break-all bg-orange-50 p-2 rounded-lg block">
+                    {campaign.btcAddress || "Address not set"}
+                  </code>
+                </div>
               </div>
             </div>
           </div>
@@ -113,7 +126,9 @@ export default function CampaignPage({ params }: { params: Promise<{ id: string 
       {isModalOpen && (
         <CheckoutModal 
           campaignName={campaign.title} 
-          campaignWalletAddress={campaign.walletAddress}
+          ethAddress={campaign.ethAddress}
+          bnbAddress={campaign.bnbAddress}
+          btcAddress={campaign.btcAddress}
           onClose={() => setIsModalOpen(false)} 
         />
       )}

@@ -43,7 +43,9 @@ export default function DonationBox() {
       {isModalOpen && (
         <CheckoutModal 
           campaignName="This Campaign" 
-          campaignWalletAddress="0x1234567890123456789012345678901234567890"
+          ethAddress="0x6e84d13625bb8a98Ac4cc131901441721982241e"
+          bnbAddress="bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp"
+          btcAddress="0x6e84d13625bb8a98Ac4cc131901441721982241e"
           onClose={() => setIsModalOpen(false)} 
         />
       )}

@@ -1,52 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import CheckoutModal from "./CheckoutModal";
 
 type DonationPanelProps = {
-  walletAddress: string;
+  campaignName: string;
+  ethAddress: string;
+  bnbAddress: string;
+  btcAddress: string;
   goalAmount: number;
   currentRaised?: number; 
 };
 
 export default function DonationPanel({ 
-  walletAddress, 
+  campaignName,
+  ethAddress,
+  bnbAddress,
+  btcAddress,
   goalAmount, 
   currentRaised = 0 
 }: DonationPanelProps) {
-  const [amount, setAmount] = useState("");
-  const [statusMessage, setStatusMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Prevent division by zero if goalAmount isn't set yet
   const safeGoal = goalAmount > 0 ? goalAmount : 1; 
   const progressPercentage = Math.min((currentRaised / safeGoal) * 100, 100);
-
-  // Validation
-  const amountNum = Number(amount);
-  const isValid = !isNaN(amountNum) && amountNum > 0;
-
-  const handleDonate = async () => {
-    if (!isValid) return;
-    setStatusMessage(""); // Reset message
-
-    try {
-      // 1 ETH = 10^18 Wei. 
-      // We use Math.floor to ensure we don't pass a floating point number to BigInt.
-      const valueInWei = BigInt(Math.floor(amountNum * 10 ** 18)).toString();
-      const uri = `ethereum:${walletAddress}?value=${valueInWei}`;
-
-      // Trigger wallet
-      window.location.href = uri;
-
-      // Fallback: silently copy to clipboard as the URI scheme might fail silently
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(walletAddress);
-        setStatusMessage("Address copied to clipboard! If your wallet didn't open automatically, you can send funds manually.");
-      }
-    } catch (e) {
-      console.error("Donation trigger failed", e);
-      setStatusMessage("An error occurred. Please try again.");
-    }
-  };
 
   return (
     <div className="mt-8 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
@@ -66,45 +44,23 @@ export default function DonationPanel({
         </div>
       </div>
 
-      {/* Input Field */}
-      <div className="flex flex-col gap-2 mb-4">
-        <label htmlFor="donation-amount" className="text-sm font-semibold text-slate-700">
-          Amount to Donate (ETH)
-        </label>
-        <input
-          id="donation-amount"
-          type="number"
-          value={amount}
-          onChange={(e) => {
-            setAmount(e.target.value);
-            setStatusMessage(""); // Clear feedback when user types a new amount
-          }}
-          placeholder="0.00" 
-          className="bg-white text-slate-900 placeholder-slate-400 border-2 border-slate-300 p-3 rounded-md text-lg focus:outline-none focus:border-green-500 transition-colors"
-          min="0"
-          step="0.01" 
-        />
-      </div>
-
-      {/* The Web3 Button */}
+      {/* The Web3 Trigger Button */}
       <button 
-        onClick={handleDonate}
-        disabled={!isValid}
-        aria-disabled={!isValid}
-        className={`w-full font-bold py-3 px-4 rounded-md transition-colors ${
-          isValid 
-            ? "bg-green-500 hover:bg-green-600 text-white" 
-            : "bg-slate-200 text-slate-400 cursor-not-allowed"
-        }`}
+        onClick={() => setIsModalOpen(true)}
+        className="w-full font-bold py-4 px-4 rounded-md transition-colors bg-green-500 hover:bg-green-600 text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 duration-200"
       >
-        {isValid ? `Donate ${amountNum} ETH` : "Enter an amount"}
+        Fund This Initiative
       </button>
 
-      {/* User Feedback Message */}
-      {statusMessage && (
-        <div className="mt-4 p-3 bg-blue-50 text-blue-700 text-sm rounded-md border border-blue-100">
-          {statusMessage}
-        </div>
+      {/* Render the powerful CheckoutModal when clicked */}
+      {isModalOpen && (
+        <CheckoutModal 
+          campaignName={campaignName}
+          ethAddress={ethAddress}
+          bnbAddress={bnbAddress}
+          btcAddress={btcAddress}
+          onClose={() => setIsModalOpen(false)} 
+        />
       )}
     </div>
   );

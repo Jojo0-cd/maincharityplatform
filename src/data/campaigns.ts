@@ -6,7 +6,10 @@ export interface Campaign {
   imageUrl: string;
   goalAmount: number;
   currentRaised: number;
-  walletAddress: string;
+  ethAddress: string;
+  btcAddress: string;
+  bnbAddress: string;
+  paypalLink: string;
 }
 
 export const campaigns: Campaign[] = [
@@ -18,7 +21,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1504297050568-910d24c426d3?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 5.0, 
     currentRaised: 2.1, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "tech-for-kids", 
@@ -28,7 +34,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 10.0, 
     currentRaised: 8.5, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "emergency-relief", 
@@ -38,7 +47,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 2.0, 
     currentRaised: 0.5, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "ocean-cleanup", 
@@ -48,7 +60,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1484291470158-b8f8d608850d?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 8.0, 
     currentRaised: 3.2, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "urban-gardens", 
@@ -58,7 +73,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 3.5, 
     currentRaised: 1.8, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "animal-shelter", 
@@ -68,7 +86,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 4.0, 
     currentRaised: 2.9, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "senior-companions", 
@@ -78,7 +99,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1538356111053-748a48e1acb8?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 1.5, 
     currentRaised: 0.9, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "literacy-boost", 
@@ -88,7 +112,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 2.5, 
     currentRaised: 1.1, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "renewable-energy", 
@@ -98,7 +125,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 12.0, 
     currentRaised: 4.5, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "mental-health", 
@@ -108,7 +138,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 5.0, 
     currentRaised: 2.0, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "tree-planting", 
@@ -118,7 +151,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 6.0, 
     currentRaised: 3.8, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "youth-sports", 
@@ -128,7 +164,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 4.5, 
     currentRaised: 1.2, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "refugee-support", 
@@ -138,7 +177,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 15.0, 
     currentRaised: 9.0, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "disability-advocacy", 
@@ -148,7 +190,10 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 3.0, 
     currentRaised: 0.7, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   },
   { 
     id: "music-arts", 
@@ -158,6 +203,9 @@ export const campaigns: Campaign[] = [
     imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1200&q=80",
     goalAmount: 2.0, 
     currentRaised: 1.5, 
-    walletAddress: "0x7100f7A88490724EbCb2028d16384743cD4d4A45" 
+    ethAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    btcAddress: "bc1q05tpud76f9x0z5783r5x59aa5t4xzpp3fwquqp", 
+    bnbAddress: "0x6e84d13625bb8a98Ac4cc131901441721982241e", 
+    paypalLink: "" 
   }
 ];

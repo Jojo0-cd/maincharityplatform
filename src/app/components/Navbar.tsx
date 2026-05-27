@@ -6,8 +6,8 @@ import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 type EthereumProvider = {
   request: (args: { method: string; params?: unknown[] | unknown }) => Promise<unknown>;
-  on: (eventName: string, handler: (accounts: string[]) => void) => void;
-  removeListener: (eventName: string, handler: (accounts: string[]) => void) => void;
+  on: (eventName: string, handler: (...args: any[]) => void) => void;
+  removeListener: (eventName: string, handler: (...args: any[]) => void) => void;
 };
 
 declare global {
@@ -19,11 +19,27 @@ declare global {
 export default function Navbar() {
   const [account, setAccount] = useState<string | null>(null);
   const [balance, setBalance] = useState<string | null>(null);
+  const [networkSymbol, setNetworkSymbol] = useState<string>("ETH");
   const { isLoaded, isSignedIn } = useUser();
 
   const formatAddress = (address: string) => {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   };
+
+  // Helper to determine if we are on BSC (Mainnet 0x38 or Testnet 0x61)
+  const updateNetworkSymbol = useCallback(async () => {
+    if (!window.ethereum) return;
+    try {
+      const chainId = (await window.ethereum.request({ method: "eth_chainId" })) as string;
+      if (chainId === "0x38" || chainId === "0x61") {
+        setNetworkSymbol("BNB");
+      } else {
+        setNetworkSymbol("ETH");
+      }
+    } catch (error) {
+      console.error("Failed to fetch chain ID", error);
+    }
+  }, []);
 
   const fetchBalance = useCallback(async (walletAddress: string) => {
     if (!window.ethereum) return;
@@ -56,6 +72,7 @@ export default function Navbar() {
       
       if (accounts && accounts.length > 0) {
         setAccount(accounts[0]);
+        await updateNetworkSymbol();
         fetchBalance(accounts[0]);
       }
     } catch (error: unknown) {
@@ -79,6 +96,7 @@ export default function Navbar() {
         const accounts = (await ethereum.request({ method: "eth_accounts" })) as string[];
         if (accounts && accounts.length > 0) {
           setAccount(accounts[0]);
+          await updateNetworkSymbol();
           fetchBalance(accounts[0]);
         }
       } catch (error) {
@@ -89,6 +107,7 @@ export default function Navbar() {
     const handleAccountsChanged = (accounts: string[]) => {
       if (accounts.length > 0) {
         setAccount(accounts[0]);
+        updateNetworkSymbol();
         fetchBalance(accounts[0]);
       } else {
         setAccount(null);
@@ -96,18 +115,29 @@ export default function Navbar() {
       }
     };
 
+    const handleChainChanged = () => {
+      // MetaMask recommends reloading the page when the chain changes, 
+      // but we can also just silently update the symbol and balance
+      if (account) {
+        updateNetworkSymbol();
+        fetchBalance(account);
+      }
+    };
+
     checkIfWalletIsConnected();
 
     if (ethereum) {
       ethereum.on("accountsChanged", handleAccountsChanged);
+      ethereum.on("chainChanged", handleChainChanged);
     }
 
     return () => {
       if (ethereum && ethereum.removeListener) {
         ethereum.removeListener("accountsChanged", handleAccountsChanged);
+        ethereum.removeListener("chainChanged", handleChainChanged);
       }
     };
-  }, [fetchBalance]);
+  }, [fetchBalance, account, updateNetworkSymbol]);
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -163,7 +193,7 @@ export default function Navbar() {
                 <>
                   {balance !== null && (
                     <span className="bg-white px-2.5 py-1 rounded-md shadow-sm border border-gray-200 text-gray-700 font-mono text-xs">
-                      {balance} ETH
+                      {balance} {networkSymbol}
                     </span>
                   )}
                   <span className="flex items-center gap-2">
