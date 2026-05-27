@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TransactionReceipt from './TransactionReceipt';
 
-// Keep the confetti function!
 function triggerDonationSuccess() {}
 
 function toHexWei(amount: string) {
@@ -16,6 +15,24 @@ function toHexWei(amount: string) {
 }
 
 type Currency = 'ETH' | 'BNB' | 'BTC';
+
+// Define the networks so MetaMask knows exactly what to switch to or add
+const NETWORKS = {
+  ETH: {
+    chainId: '0xaa36a7', // Sepolia Testnet
+    chainName: 'Sepolia Testnet',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://rpc.sepolia.org'],
+    blockExplorerUrls: ['https://sepolia.etherscan.io']
+  },
+  BNB: {
+    chainId: '0x61', // BSC Testnet
+    chainName: 'Binance Smart Chain Testnet',
+    nativeCurrency: { name: 'BNB', symbol: 'tBNB', decimals: 18 },
+    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+    blockExplorerUrls: ['https://testnet.bscscan.com']
+  }
+};
 
 export default function CheckoutModal({ 
   campaignName, 
@@ -36,7 +53,6 @@ export default function CheckoutModal({
   const [gasEstimate, setGasEstimate] = useState<number>(0.002);
   const [status, setStatus] = useState<{ type: 'idle' | 'success' | 'error' | 'info'; message: string; txHash?: string }>({ type: 'idle', message: '' });
 
-  // Update gas estimates when currency changes
   const handleTabChange = (newCurrency: Currency) => {
     setCurrency(newCurrency);
     setStatus({ type: 'idle', message: '' });
@@ -57,9 +73,6 @@ export default function CheckoutModal({
     if (!amount || Number(amount) <= 0) return;
     setStatus({ type: 'idle', message: '' });
     
-    // Select the correct address based on the current active tab
-    const targetAddress = currency === 'ETH' ? ethAddress : bnbAddress;
-    
     type EthereumProvider = { request: (args: { method: string; params?: unknown }) => Promise<unknown> };
     const ethereum = (window as unknown as { ethereum?: EthereumProvider }).ethereum;
 
@@ -70,22 +83,55 @@ export default function CheckoutModal({
 
     try {
       setIsProcessing(true);
+
+      // --- NEW: AUTOMATIC NETWORK SWITCHING ---
+      const targetNetwork = currency === 'ETH' ? NETWORKS.ETH : NETWORKS.BNB;
+      const currentChainId = (await ethereum.request({ method: 'eth_chainId' })) as string;
+
+      if (currentChainId !== targetNetwork.chainId) {
+        setStatus({ type: 'info', message: `Switching wallet to ${currency} network...` });
+        try {
+          await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: targetNetwork.chainId }],
+          });
+        } catch (switchError: unknown) {
+          const code = (switchError as { code?: number }).code;
+          // Error 4902 means the user doesn't have this network added to their MetaMask yet
+          if (code === 4902) {
+            setStatus({ type: 'info', message: `Adding ${currency} network to wallet...` });
+            await ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [targetNetwork],
+            });
+          } else {
+            throw new Error("Network switch rejected by user.");
+          }
+        }
+      }
+
+      setStatus({ type: 'info', message: 'Please confirm the transaction...' });
+
+      // Request Accounts & Send Transaction
       const accounts = (await ethereum.request({ method: "eth_requestAccounts" })) as string[];
       if (!accounts || accounts.length === 0) throw new Error("No accounts connected.");
+
+      const targetAddress = currency === 'ETH' ? ethAddress : bnbAddress;
 
       const txHash = (await ethereum.request({
         method: "eth_sendTransaction",
         params: [{ from: accounts[0], to: targetAddress, value: toHexWei(amount) }],
       })) as string;
 
-      // SUCCESS: Fire the confetti + trigger the receipt!
+      // SUCCESS
       triggerDonationSuccess(); 
       setStatus({ type: 'success', message: 'Donation successful! Thank you.', txHash });
       
     } catch (error: unknown) {
       const errorCode = typeof error === 'object' && error !== null && 'code' in error ? (error as { code?: number }).code : undefined;
-      if (errorCode === 4001) setStatus({ type: 'error', message: 'Transaction rejected in wallet.' });
-      else setStatus({ type: 'error', message: 'Transaction failed. Check console.' });
+      if (errorCode === 4001) setStatus({ type: 'error', message: 'Request rejected in wallet.' });
+      else setStatus({ type: 'error', message: 'Transaction failed or network switch aborted.' });
+      console.error(error);
     } finally {
       setIsProcessing(false);
     }
@@ -95,7 +141,6 @@ export default function CheckoutModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div className="w-full max-w-md p-6 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl text-white relative">
         
-        {/* Render Receipt on Web3 Success */}
         {status.type === 'success' && status.txHash ? (
           <TransactionReceipt 
             txHash={status.txHash} 
@@ -111,14 +156,12 @@ export default function CheckoutModal({
               <button onClick={onClose} className="text-zinc-400 hover:text-white transition-colors text-2xl font-bold">&times;</button>
             </div>
 
-            {/* Currency Toggle */}
             <div className="flex p-1 mb-6 bg-zinc-800 rounded-lg">
               <button onClick={() => handleTabChange('ETH')} className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${currency === 'ETH' ? 'bg-purple-600 text-white shadow-sm' : 'text-zinc-400 hover:text-white'}`}>ETH</button>
               <button onClick={() => handleTabChange('BNB')} className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${currency === 'BNB' ? 'bg-[#F3BA2F] text-black shadow-sm' : 'text-zinc-400 hover:text-white'}`}>BNB</button>
               <button onClick={() => handleTabChange('BTC')} className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${currency === 'BTC' ? 'bg-[#F7931A] text-black shadow-sm' : 'text-zinc-400 hover:text-white'}`}>BTC</button>
             </div>
 
-            {/* Dynamic Content Based on Selected Currency */}
             {currency !== 'BTC' ? (
               <>
                 <div className="mb-6">
@@ -154,14 +197,12 @@ export default function CheckoutModal({
               </div>
             )}
 
-            {/* Status Messages */}
             {(status.type === 'error' || status.type === 'info') && (
               <div className={`mb-4 p-3 rounded-md text-sm text-center ${status.type === 'info' ? 'bg-blue-900/50 text-blue-400 border border-blue-800' : 'bg-red-900/50 text-red-400 border border-red-800'}`}>
                 <p className="font-semibold">{status.message}</p>
               </div>
             )}
 
-            {/* Action Button */}
             <button
               onClick={handleAction}
               disabled={currency !== 'BTC' && (!amount || isProcessing)}
@@ -171,7 +212,7 @@ export default function CheckoutModal({
                   : 'bg-white text-black hover:bg-zinc-200 hover:scale-[1.02]'
               }`}
             >
-              {isProcessing ? 'Confirming in Wallet...' : currency === 'BTC' ? 'Copy BTC Address' : 'Confirm Transaction'}
+              {isProcessing ? 'Waiting on Wallet...' : currency === 'BTC' ? 'Copy BTC Address' : 'Confirm Transaction'}
             </button>
           </>
         )}
