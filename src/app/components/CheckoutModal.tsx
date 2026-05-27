@@ -19,18 +19,18 @@ type Currency = 'ETH' | 'BNB' | 'BTC';
 // Define the networks so MetaMask knows exactly what to switch to or add
 const NETWORKS = {
   ETH: {
-    chainId: '0xaa36a7', // Sepolia Testnet
-    chainName: 'Sepolia Testnet',
-    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://rpc.sepolia.org'],
-    blockExplorerUrls: ['https://sepolia.etherscan.io']
+    chainId: '0x1', // Ethereum Mainnet
+    chainName: 'Ethereum Mainnet',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://cloudflare-eth.com'],
+    blockExplorerUrls: ['https://etherscan.io']
   },
   BNB: {
-    chainId: '0x61', // BSC Testnet
-    chainName: 'Binance Smart Chain Testnet',
-    nativeCurrency: { name: 'BNB', symbol: 'tBNB', decimals: 18 },
-    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-    blockExplorerUrls: ['https://testnet.bscscan.com']
+    chainId: '0x38', // BSC Mainnet
+    chainName: 'Binance Smart Chain Mainnet',
+    nativeCurrency: { name: 'Binance Coin', symbol: 'BNB', decimals: 18 },
+    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    blockExplorerUrls: ['https://bscscan.com']
   }
 };
 

@@ -15,8 +15,8 @@ export default function TransactionReceipt({
 }) {
   // Dynamically set the block explorer based on the currency used
   const explorerUrl = currency === 'BNB' 
-    ? `https://testnet.bscscan.com/tx/${txHash}` // Use bscscan.com for mainnet BNB
-    : `https://sepolia.etherscan.io/tx/${txHash}`;
+  ? `https://bscscan.com/tx/${txHash}` 
+  : `https://etherscan.io/tx/${txHash}`;
   
   const explorerName = currency === 'BNB' ? 'BscScan' : 'Etherscan';
 
